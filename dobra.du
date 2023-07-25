@@ -1,0 +1,45 @@
+from Argparse import Parser;
+
+class Command {
+  var parameters = [];
+
+  init(name, description, run) {
+    this.name = name;
+    this.description = description;
+    this.run = run;
+
+    this.parser = Parser(this.name, this.description, "");
+  }
+
+  exec() {
+    this.run(this);
+  }
+
+  addString(name, description, required, customName="") {
+    this.parser.addString(name, description, required, customName);
+    this.parameters.push({
+      "type": "string", 
+      "name": name, 
+      "description": description,
+      "required": required,
+      "customName": customName
+    });
+  }
+
+  usage() {
+    var paramsUsage = "";
+    for (var i = 0; i < this.parameters.len(); i += 1) {
+      paramsUsage += "  {}:\n      {}".format(this.parameters[i]["name"], this.parameters[i]["description"]);
+    }
+    print(paramsUsage);
+  }
+}
+
+def printTest(cmd) {
+  print("Test");
+}
+
+var rootCommand = Command("dobra", "cli commander", printTest);
+rootCommand.addString("--test", "this is a test", false);
+rootCommand.exec();
+rootCommand.usage();
